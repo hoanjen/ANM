@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <%- include('../partials/head'); %>
+</head>
+
+<body class="container">
+
+
+
+   <main>
+      <div class="jumbotron">
+         <h1>GROUP 5</h1>
+         <p>Welcome to the voting system</p>
+         <div class="login-container">
+            <form id="registerForm" class="login-form" >
+               <h2>register</h2>
+               <div class="form-group">
+                  <label for="cccd">CCCD</label>
+                  <input type="text" id="cccd" name="cccd" required>
+               </div>
+               <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" name="name" required>
+               </div>
+               <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" id="password" name="password" required>
+               </div>
+               <div class="form-group">
+                  <label for="Role">Role</label>
+                  <select id="isAdmin" name="isAdmin">
+                     <option value="0">User</option>
+                     <option value="1">Signer</option>
+                  </select>
+               </div>
+               
+               <button type="submit">Register</button>
+            </form>
+            <form action="/login" method="get">
+               <button type="submit">To Login Page</button>
+            </form>
+            <script>
+               document.getElementById('registerForm').addEventListener('submit', function (event) {
+                  event.preventDefault(); 
+                  console.log(123);
+                  const cccd = document.getElementById('cccd').value;
+                  const name = document.getElementById('name').value;
+                  const password = document.getElementById('password').value;
+                  const isAdminn = document.getElementById('isAdmin').value;
+                  const isAdmin = isAdminn === "0" ? false : true;
+                  const formData = {
+                     cccd,
+                     name,
+                     password,
+                     isAdmin
+                  };
+
+                  fetch('/user/register', {
+                     method: 'POST',
+                     headers: {
+                        'Content-Type': 'application/json'
+                     },
+                     body: JSON.stringify(formData)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                     window.location.href = '/login'
+                     console.log('Success:', data);
+                  })
+                  .catch((error) => {
+                     console.error('Error:', error);
+                  });
+               });
+               
+            </script>
+         </div>
+      </div>
+   </main>
+
+   <script>
+   </script>
+   <footer>
+      <%- include('../partials/footer'); %>
+   </footer>
+
+</body>
+
+</html>
