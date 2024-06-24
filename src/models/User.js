@@ -6,7 +6,6 @@ const User = new Schema({
     cccd: {type: String, require: true},
     password: {type: String, require: true},
     isAdmin: {type: Boolean, require: true},
-    publickey:{type: Object, require: false}
 },{
     timestamps: true
 })

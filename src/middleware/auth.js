@@ -4,24 +4,23 @@ const tokenService = require('../services/token');
 const httpStatus = require("http-status");
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
-
+const User = require('../models/User')
 
 
 
 const auth = async (req,res, next) => {
-   const token = req.cookies.token;
-
+   const token = req.cookies.access_token;
    if(!token) {
       console.log('no token')
       req.user = null;
-      return next();
+      return res.redirect('/login');
    }
    const payload = jwt.verify(token, process.env.secret);
+   console.log(payload);
    const user = await User.findById(payload.id).lean();
    if (!user) {
       console.log('token khon hop le');
-      req.user = null;
-      return next();
+      return res.redirect('/login');
    };
    req.user = user;
    next();
@@ -29,19 +28,21 @@ const auth = async (req,res, next) => {
 
 const authorize = (rolesAllow = []) => async (req, res, next) => {
    try {
-      const roleOfUser = req.user.role;
-
-      const allow = rolesAllow.includes(roleOfUser) ;
-      
+      let allow;
+      if(req.user.isAdmin){
+         allow = rolesAllow.includes('admin') ;
+      }
+      else{
+         allow = rolesAllow.includes('user') ;
+      }
 
       if(allow){
-         req.roles = roleOfUser;
          return next();
       }
-      console.log("khong co quyen")
-      return next();
+      
+      return res.redirect('/');
    } catch (error) {
-      console.log("khong co quyen")
+      console.log(error);
       return next();
    }
 }

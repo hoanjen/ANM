@@ -13,12 +13,14 @@
 
    <main>
       <div class="jumbotron">
-         <h2>Voting list is ready</h2>
+         <h2>DANH SÁCH CÁC CUỘC BỎ PHIẾU ĐANG DIỄN RA</h2>
          <br>
          <br>
          <% for(let item of list) { %>
-            <%- include('./temvote', {item}); %>
+            <%- include('./temSig', {item}); %>
          <% } %>
+         <br>
+         
       </div>
    </main>
 

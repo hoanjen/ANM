@@ -1,0 +1,90 @@
+<div class="d-flex w-" style="width: 100%;">
+   <div style="width: 100%;">
+      <div style="  width: 100%;">
+         <h3 >
+            <%= item.title %>
+         </h3>
+         <button style="float: right;" id="btnend<%= item._id %>">Kết thúc</button>
+      </div>
+
+      <table class="table table-striped">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">Tên ứng viên</th>
+            </tr>
+         </thead>
+         <tbody>
+            <% item.candidateusers.forEach((item2,index)=> { %>
+               <tr>
+                  <th scope="row">
+                     <%= index + 1%>
+                  </th>
+                  <td>
+                     <%= item2.name %>
+                  </td>
+               </tr>
+               <% }); %>
+         </tbody>
+      </table>
+      <br>
+      <div>
+         <h5>N: <%= item.n %>
+         </h5>
+         <h5>D: <%= item.d %>
+         </h5>
+      </div>
+      <table class="table table-striped">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">Id</th>
+               <th scope="col">Tên người bỏ phiếu</th>
+               <th scope="col">CCCD</th>
+               <th scope="col">Phiếu đã mã hóa</th>
+               <th scope="col">Hành động</th>
+            </tr>
+         </thead>
+         <tbody>
+            <% item.signatures.forEach((item2,index)=> { %>
+                  <%- include('./sig', {item2,index,item}); %>
+               <% }); %>
+         </tbody>
+      </table>
+      
+
+   </div>
+
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<script>
+   document.getElementById('btnend<%= item._id %>').addEventListener('click', function (event) {
+         event.preventDefault();
+
+         const formData = {
+            voting: "<%= item._id %>"
+         };
+
+         fetch('/user/end', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+         })
+            .then(response => response.json())
+            .then(data => {
+               toastr.success(data.message);
+               setTimeout(() => {
+                  window.location.href = '/voting/admin';
+               }, 1000)
+            })
+            .catch((error) => {
+               console.error('Error:', error);
+            });
+      });
+</script>

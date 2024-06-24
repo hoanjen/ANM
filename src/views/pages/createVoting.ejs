@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <%- include('../partials/head'); %>
+</head>
+
+<body class="container">
+
+   <header>
+      <%- include('../partials/header'); %>
+   </header>
+
+   <main>
+      <div class="jumbotron">
+         <h2>You are admin, u can create voting</h2>
+         <br>
+         <form id="createVoting">
+            <div class="form-group">
+               <label for="title">Title</label>
+               <input type="text" id="title" name="title" required>
+            </div>
+            <button type="button" onclick="addInput()">+</button> 
+            <div id="inputContainer">
+               
+               
+            </div>
+         
+            <button type="submit">Create</button>
+         </form>
+         
+         
+      </div>
+   </main>
+   <script>
+      function addInput() {
+         var newInput = document.createElement("input");
+         newInput.type = "text";
+         newInput.placeholder = "Enter name of candidate..."; 
+         var div = document.createElement("span");
+         div.textContent = "Name of candidate: ";
+
+         var container = document.getElementById("inputContainer");
+         container.appendChild(div);
+         container.appendChild(newInput);
+         container.appendChild(document.createElement("br"));
+         container.appendChild(document.createElement("br")); 
+      }
+
+      document.getElementById('createVoting').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            var inputs = document.querySelectorAll('#inputContainer input');
+            var arrName = [];
+            inputs.forEach(function (input) {
+               arrName.push(input.value);
+            });
+            const formData = {
+               title,
+               arrName
+            };
+
+            fetch('/user/create', {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(formData)
+            })
+               .then(response => response.json())
+               .then(data => {
+
+                  toastr.success(`${data.message}`);
+               })
+               .catch((error) => {
+                  console.error('Error:', error);
+               });
+         });
+   </script>
+   <footer>
+      <%- include('../partials/footer'); %>
+   </footer>
+
+</body>
+
+</html>
